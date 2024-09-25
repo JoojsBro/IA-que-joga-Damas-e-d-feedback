@@ -5,7 +5,6 @@ from .constantes import BLACK, ROWS, PURPLE, SQUARE_SIZE, COLS, WHITE
 class Tabuleiro:
    def __init__(self,):
       self.tabuleiro = []
-      self.selected_piece = None
       self.purple_left = self.white_left = 12
       self.purple_kings = self.white_kings = 0
       self.create_board()
@@ -51,3 +50,5 @@ class Tabuleiro:
             peca = self.tabuleiro[row][col]
             if peca != 0:
                peca.draw(win)
+
+#TODO parou no terceiro vídeo no tempo 16:49
