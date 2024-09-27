@@ -37,3 +37,5 @@ def main():
    pygame.quit()
 
 main()
+
+#TODO parou em 45:35 no vídeo 3 do tutorial de montar o jogo

@@ -1,7 +1,7 @@
 import pygame
-from .constantes import PURPLE, WHITE
-from .tabuleiro import Tabuleiro
 from .peca import Peca
+from .tabuleiro import Tabuleiro
+from .constantes import PURPLE, WHITE, BLUE, SQUARE_SIZE
 
 class Game:
    def __init__(self, win):
@@ -11,6 +11,7 @@ class Game:
    def update(self):
       self.tabuleiro.draw(self.win)
       pygame.display.update()
+      self.draw_valid_moves(self.valid_moves)
 
    def _init(self):
       self.selected = None
@@ -40,10 +41,17 @@ class Game:
       peca = self.tabuleiro.get_peca(row, col)
       if self.selected and peca == 0 and (row, col) in self.valid_moves:
          self.tabuleiro.move(self.selected, row, col)
+         self.change_turn()
       else:
          return False
       
       return True
+   
+   def draw_valid_moves(self, moves):
+      for move in moves:
+         row, col = move
+         pygame.draw.circle(self.win, BLUE, (row * SQUARE_SIZE - SQUARE_SIZE//2, col * SQUARE_SIZE - SQUARE_SIZE//2), 15)
+
    
    def change_turn(self):
       if self.turn == PURPLE:
