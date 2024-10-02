@@ -19,7 +19,7 @@ class Tabuleiro:
       self.tabuleiro[peca.row] [peca.col], self.tabuleiro[row] [col] = self.tabuleiro[row][col], self.tabuleiro[peca.row][peca.col]
       peca.move(row, col)
 
-      if row == ROWS or row == 0:
+      if row == ROWS - 1 or row == 0:
          peca.make_king()
          if peca.color == WHITE:
             self.white_kings += 1

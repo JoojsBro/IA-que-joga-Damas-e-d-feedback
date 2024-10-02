@@ -1,5 +1,4 @@
 import pygame
-from .peca import Peca
 from .tabuleiro import Tabuleiro
 from .constantes import PURPLE, WHITE, BLUE, SQUARE_SIZE
 
@@ -28,9 +27,9 @@ class Game:
          if not result:
             self.selected = None
             self.select(row, col)
-      else:
+      else:   
          peca = self.tabuleiro.get_peca(row, col)
-         if peca != 0 and self.peca.color == self.turn:
+         if peca != 0 and peca.color == self.turn:
             self.selected = peca
             self.valid_moves = self.tabuleiro.get_valid_moves(peca)
             return True

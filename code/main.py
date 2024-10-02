@@ -1,5 +1,5 @@
 import pygame
-from damas.constantes import WIDTH, HEIGHT, SQUARE_SIZE
+from damas.constantes import WIDTH, HEIGHT, SQUARE_SIZE, PURPLE, WHITE
 from damas.tabuleiro import Tabuleiro
 from damas.game import Game
 
@@ -30,6 +30,8 @@ def main():
          if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             row, col = get_row_col_from_mouse(pos)
+            if game.turn == PURPLE:
+               game.select(row, col)
             
 
       game.update()
