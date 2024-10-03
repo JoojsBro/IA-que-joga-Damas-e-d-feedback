@@ -1,5 +1,5 @@
 import pygame
-from damas.constantes import WIDTH, HEIGHT, SQUARE_SIZE, PURPLE, WHITE
+from damas.constantes import WIDTH, HEIGHT, SQUARE_SIZE, PURPLE
 from damas.tabuleiro import Tabuleiro
 from damas.game import Game
 
@@ -22,6 +22,9 @@ def main():
 
    while run:
       clock.tick(FPS)
+
+      if game.winner() != None:
+         print(game.winner())
       
       for event in pygame.event.get():
          if event.type == pygame.QUIT:
@@ -30,8 +33,7 @@ def main():
          if event.type == pygame.MOUSEBUTTONDOWN:
             pos = pygame.mouse.get_pos()
             row, col = get_row_col_from_mouse(pos)
-            if game.turn == PURPLE:
-               game.select(row, col)
+            game.select(row, col)
             
 
       game.update()
@@ -39,5 +41,3 @@ def main():
    pygame.quit()
 
 main()
-
-#TODO parou em 45:35 no vídeo 3 do tutorial de montar o jogo

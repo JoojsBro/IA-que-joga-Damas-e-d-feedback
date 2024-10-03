@@ -3,11 +3,11 @@ from .peca import Peca
 from .constantes import BLACK, ROWS, PURPLE, SQUARE_SIZE, COLS, WHITE
 
 class Tabuleiro:
-   def __init__(self,):
+   def __init__(self):
       self.tabuleiro = []
       self.purple_left = self.white_left = 12
       self.purple_kings = self.white_kings = 0
-      self.create_board()
+      self.create_tabuleiro()
 
    def draw_squares(self, win):
       win.fill(BLACK)
@@ -29,7 +29,7 @@ class Tabuleiro:
    def get_peca(self, row, col):
       return self.tabuleiro[row][col]
 
-   def create_board(self):
+   def create_tabuleiro(self):
       for row in range(ROWS):
          self.tabuleiro.append([])
          for col in range(COLS):
@@ -51,21 +51,37 @@ class Tabuleiro:
             if peca != 0:
                peca.draw(win)
 
+   def remove(self, pecas):
+      for peca in pecas:
+         self.tabuleiro[peca.row][peca.col] = 0
+         if peca != 0:
+            if peca.color == PURPLE:
+               self.purple_left -= 1
+            else:
+               self.white_left -= 1
+
+   def winner(self):
+      if self.purple_left <= 0:
+         return WHITE
+      elif self.white_left <= 0:
+         return PURPLE
+      
+      return None
+   
    def get_valid_moves(self, peca):
-      moves = {}
-      left = peca.col -1
-      right = peca.col +1
-      row = peca.row
+        moves = {}
+        left = peca.col - 1
+        right = peca.col + 1
+        row = peca.row
 
-      if peca.color == PURPLE or peca.king:
-         moves.update(self._traverse_left(row -1, max(row -3, -1), -1, peca.color, left))
-         moves.update(self._traverse_left(row -1, max(row -3, -1), -1, peca.color, right))
-
-      if peca.color == WHITE or peca.king:
-         moves.update(self._traverse_left(row +1, max(row +3, +1), 1, peca.color, left))
-         moves.update(self._traverse_left(row +1, max(row +3, +1), 1, peca.color, right))
-
-      return moves
+        if peca.color == PURPLE or peca.king:
+            moves.update(self._traverse_left(row -1, max(row-3, -1), -1, peca.color, left))
+            moves.update(self._traverse_right(row -1, max(row-3, -1), -1, peca.color, right))
+        if peca.color == WHITE or peca.king:
+            moves.update(self._traverse_left(row +1, min(row+3, ROWS), 1, peca.color, left))
+            moves.update(self._traverse_right(row +1, min(row+3, ROWS), 1, peca.color, right))
+    
+        return moves
 
    def _traverse_left(self, start, stop, step, color, left, skipped=[]):
       moves = {}
@@ -91,7 +107,7 @@ class Tabuleiro:
 
                moves.update(self._traverse_left(r+step, row, step, color, left-1, skipped=last))
                moves.update(self._traverse_right(r+step, row, step, color, left+1, skipped=last))
-               break
+            break
 
          elif current.color == color:
             break
@@ -127,7 +143,7 @@ class Tabuleiro:
 
                moves.update(self._traverse_left(r+step, row, step, color, right+1, skipped=last))
                moves.update(self._traverse_right(r+step, row, step, color, right-1, skipped=last))
-               break
+            break
 
          elif current.color == color:
             break
