@@ -63,3 +63,10 @@ class Game:
          self.turn = WHITE
       else:
          self.turn = PURPLE
+
+   def get_tabuleiro(self):
+      return self.tabuleiro
+   
+   def ai_move(self, tabuleiro):
+      self.tabuleiro = tabuleiro
+      self.change_turn()

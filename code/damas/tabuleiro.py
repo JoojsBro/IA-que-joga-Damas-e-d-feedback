@@ -15,6 +15,17 @@ class Tabuleiro:
          for col in range(row % 2, ROWS, 2):
             pygame.draw.rect(win, PURPLE, (row * SQUARE_SIZE, col * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
 
+   def evaluate(self):
+      return self.white_left - self.purple_left + (self.white_kings * 0.5 - self.purple_kings * 0.5)
+   
+   def get_all_pecas(self, color):
+      pecas = []
+      for row in self.tabuleiro:
+         for peca in row:
+            if peca != 0 and peca.color == color:
+               pecas.append(peca)
+      return pecas
+
    def move(self, peca, row, col):
       self.tabuleiro[peca.row] [peca.col], self.tabuleiro[row] [col] = self.tabuleiro[row][col], self.tabuleiro[peca.row][peca.col]
       peca.move(row, col)
@@ -84,72 +95,67 @@ class Tabuleiro:
         return moves
 
    def _traverse_left(self, start, stop, step, color, left, skipped=[]):
-      moves = {}
-      last = []
-      for r in range(start, stop, step):
-         if left < 0:
-            break
-         
-         current = self.tabuleiro[r][left]
-         if current == 0:
-            if skipped and not last:
-               break
-            elif skipped:
-               moves[(r, left)] = last + skipped
+        moves = {}
+        last = []
+        for r in range(start, stop, step):
+            if left < 0:
+                break
+            
+            current = self.tabuleiro[r][left]
+            if current == 0:
+                if skipped and not last:
+                    break
+                elif skipped:
+                    moves[(r, left)] = last + skipped
+                else:
+                    moves[(r, left)] = last
+                
+                if last:
+                    if step == -1:
+                        row = max(r-3, 0)
+                    else:
+                        row = min(r+3, ROWS)
+                    moves.update(self._traverse_left(r+step, row, step, color, left-1,skipped=last))
+                    moves.update(self._traverse_right(r+step, row, step, color, left+1,skipped=last))
+                break
+            elif current.color == color:
+                break
             else:
-               moves[(r, left)] = last
+                last = [current]
 
-            if last:
-               if step == -1:
-                  row = max(r-3, 0)
-               else:
-                  row = min(r+3, ROWS)
-
-               moves.update(self._traverse_left(r+step, row, step, color, left-1, skipped=last))
-               moves.update(self._traverse_right(r+step, row, step, color, left+1, skipped=last))
-            break
-
-         elif current.color == color:
-            break
-         else:
-            last = [current]
-
-         left -=1
-      
-      return moves
-
+            left -= 1
+        
+        return moves
 
    def _traverse_right(self, start, stop, step, color, right, skipped=[]):
-      moves = {}
-      last = []
-      for r in range(start, stop, step):
-         if right >= COLS:
-            break
-         
-         current = self.tabuleiro[r][right]
-         if current == 0:
-            if skipped and not last:
-               break
-            elif skipped:
-               moves[(r, right)] = last + skipped
+        moves = {}
+        last = []
+        for r in range(start, stop, step):
+            if right >= COLS:
+                break
+            
+            current = self.tabuleiro[r][right]
+            if current == 0:
+                if skipped and not last:
+                    break
+                elif skipped:
+                    moves[(r,right)] = last + skipped
+                else:
+                    moves[(r, right)] = last
+                
+                if last:
+                    if step == -1:
+                        row = max(r-3, 0)
+                    else:
+                        row = min(r+3, ROWS)
+                    moves.update(self._traverse_left(r+step, row, step, color, right-1,skipped=last))
+                    moves.update(self._traverse_right(r+step, row, step, color, right+1,skipped=last))
+                break
+            elif current.color == color:
+                break
             else:
-               moves[(r, right)] = last
+                last = [current]
 
-            if last:
-               if step == -1:
-                  row = max(r-3, 0)
-               else:
-                  row = min(r+3, ROWS)
-
-               moves.update(self._traverse_left(r+step, row, step, color, right+1, skipped=last))
-               moves.update(self._traverse_right(r+step, row, step, color, right-1, skipped=last))
-            break
-
-         elif current.color == color:
-            break
-         else:
-            last = [current]
-
-         right +=1
-
-      return moves
+            right += 1
+        
+        return moves

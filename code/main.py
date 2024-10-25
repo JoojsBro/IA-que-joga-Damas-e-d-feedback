@@ -1,7 +1,8 @@
 import pygame
-from damas.constantes import WIDTH, HEIGHT, SQUARE_SIZE, PURPLE
+from damas.constantes import WIDTH, HEIGHT, SQUARE_SIZE, PURPLE, WHITE
 from damas.tabuleiro import Tabuleiro
 from damas.game import Game
+from minimax.algoritmo import minimax
 
 FPS = 60
 
@@ -23,8 +24,13 @@ def main():
    while run:
       clock.tick(FPS)
 
+      if game.turn == WHITE:
+         value, new_tabuleiro = minimax(game.get_tabuleiro(), 4,WHITE, game)
+         game.ai_move(new_tabuleiro)
+
       if game.winner() != None:
          print(game.winner())
+         run = False
       
       for event in pygame.event.get():
          if event.type == pygame.QUIT:
